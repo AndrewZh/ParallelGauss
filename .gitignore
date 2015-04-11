@@ -1,0 +1,6 @@
+*.*sdf
+*.*vcx*
+*.sln
+*.suo
+*Debug*
+*ipch*
