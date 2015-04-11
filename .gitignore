@@ -4,3 +4,6 @@
 *.suo
 *Debug*
 *ipch*
+/Gauss/dist/
+/Gauss/build/
+
