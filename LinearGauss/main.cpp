@@ -4,7 +4,7 @@
 
 
 using namespace std;
-#define N 4
+#define N 3
 
 int main()
 {
@@ -15,16 +15,16 @@ int main()
 	ifstream in;
 	in.open("input.txt");
 
-	for (int i=1; i<N; i++) 
+	for (int i=0; i<N; i++) 
 	{
-		for (int j=1; j<N+1; j++) 
+		for (int j=0; j<N+1; j++) 
 		{
 			in >> a[i][j];
 			cout << a[i][j] << " ";
 		}
 	}
 
-	for (int i=1; i<N; i++)
+	for (int i=0; i<N; i++)
 	{
 		if (a[i][i] == 0)
 		{
@@ -45,7 +45,7 @@ int main()
 				}
 		}
 	}
-	for (int k = 1; k<N-1; k++)
+	for (int k = 0; k<N-1; k++)
 	{
 		for (int i=k+1; i<N; i++)
 		{
@@ -58,7 +58,7 @@ int main()
 	
         x[N-1] = a[N-1][N]/a[N-1][N-1];
         a[N-1][N-1] = 1;
-	for (int i = N-2; i>0; i--)
+	for (int i = N-2; i>=0; i--)
 	{
 		x[i] = a[i][N];
 		for (int j=i+1; j<N; j++)
@@ -68,7 +68,7 @@ int main()
 	}	
 	
 	cout << endl;
-	for (int i=1; i<N; i++)
+	for (int i=0; i<N; i++)
 		cout << "x[" << i << "] = " << x[i] << "\n";
 	cout << endl << endl;
         cin.ignore().get();
