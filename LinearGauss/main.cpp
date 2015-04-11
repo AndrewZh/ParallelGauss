@@ -4,8 +4,10 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include <omp.h>
+
 using namespace std;
-#define N 3
+#define N 1000
 
 void generateInput(double**& matrix, double*& answer);
 void init(double**& matrix);
@@ -41,6 +43,9 @@ int main()
 				}
 		}
 	}
+        
+//##########
+        double start = omp_get_wtime();
 	for (int k = 0; k<N-1; k++)
 	{
 		for (int i=k+1; i<N; i++)
@@ -51,6 +56,8 @@ int main()
 			}
 		}
 	}
+        double finish = omp_get_wtime();
+//##########        
 	
         x[N-1] = a[N-1][N]/a[N-1][N-1];
         a[N-1][N-1] = 1;
@@ -80,7 +87,10 @@ int main()
         } else {
             cout << "OK\n";
         }
-        cin.ignore().get();
+        
+        cout << "Forward Gauss:\n\tTime spent " << finish - start << " seconds\n";
+        
+        cin.ignore().get();        
 }
 
 void generateInput(double**& matrix, double*& answer) 
@@ -89,11 +99,9 @@ void generateInput(double**& matrix, double*& answer)
     srand(time(0));    
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {
-            matrix[i][j] = rand() % 100;
-            cout << matrix[i][j] << " ";
+            matrix[i][j] = rand() % 100;            
         }        
-        answer[i] = rand()%100;        
-        cout << endl;
+        answer[i] = rand()%100;                
     }
     for (int i = 0; i < N; ++i) {
         matrix[i][N] = 0;
