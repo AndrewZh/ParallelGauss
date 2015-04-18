@@ -39,7 +39,7 @@ int main() {
 
     report.close();
     delete [] answer;
-    cin.ignore();
+    //cin.ignore();
 }
 
 double tiledGauss(double** a, double* answer) {
@@ -65,7 +65,7 @@ double tiledGauss(double** a, double* answer) {
                 }
         }
     }
-
+    
     //##########
     double start = omp_get_wtime();
     for (int i_gl = 0; i_gl < N / r1; ++i_gl) {
@@ -113,16 +113,24 @@ double tiledGauss(double** a, double* answer) {
 }
 
 void tile(int k, int i_gl, int j_gl, int r1, int r2, double** matrix) {
-    int start_i = max(k + 1, 1 + i_gl * r1);
+    int start_i = max(k+1, 1+i_gl * r1);
     int finish_i = min(1+r1*(1 + i_gl), N);
-    int start_j = max(k + 1, 1 + j_gl * r2);
+    int start_j = max(k+1, 1 + j_gl * r2);
     int finish_j = min(1+r2 * (1 + j_gl), N+1);
 
-    for (int i = start_i; i < finish_i; ++i) {
-        for (int j = start_i; j < finish_j; ++j) {
-            matrix[i][j] = matrix[i][j] - matrix[i][k] * matrix[k][j] / matrix[k][k];
+    cout << "k = " << k << endl
+            << "i = [" << start_i << ", " << finish_i << "]" << endl
+            << "j = [" << start_j << ", " << finish_j << "]" << endl;
+   
+    for (int i = start_i; i < finish_i; ++i) {               
+        double coef = matrix[i][k] / matrix[k][k];
+        for (int j = start_j; j < finish_j; ++j) {
+            matrix[i][j] = matrix[i][j] - matrix[k][j] * coef;
+            cout << matrix[i][j] << " ";
         }
+        cout << endl;
     }
+    cout << "*******\n\n";
 }
 
 double linearGauss(double** a, double* answer) {
@@ -194,23 +202,24 @@ double linearGauss(double** a, double* answer) {
 }
 
 void generateInput(double**& matrix, double*& answer) {
-    init(matrix);
+    init(matrix);        
     srand(time(0));
+    //int c = 1;
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {
             matrix[i][j] = rand() % 50;
-            //  cout << matrix[i][j] << " ";
+              cout << matrix[i][j] << " ";
         }
         answer[i] = rand() % 50;
-        //cout << answer[i] << endl;
+        cout << answer[i] << endl;
     }
-    //cout << "***\n";
+    cout << "***\n";
     for (int i = 0; i < N; ++i) {
         matrix[i][N] = 0;
         for (int j = 0; j < N; ++j) {
             matrix[i][N] += matrix[i][j] * answer[j];
         }
-        //cout << matrix[i][N] << endl;
+        cout << (int)matrix[i][N] << endl;
     }
 }
 
