@@ -7,7 +7,7 @@
 #include <omp.h>
 
 using namespace std;
-#define N 1000
+#define N 3000
 
 void generateInput(double**& matrix, double*& answer);
 void init(double**& matrix);
