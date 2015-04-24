@@ -44,7 +44,7 @@ double tiledGauss(double** a, double* answer, size_t N) {
         cout << "ERROR\n";
     }
 
-    cout << "Forward Gauss:\n\tTime spent " << finish - start << " seconds\n";
+    cout << "Tiled:\n\tTime spent " << finish - start << " seconds\n";
     delete [] x;
 
     return finish - start;

@@ -10,6 +10,7 @@ int main() {
     report << "Size,Linear Gauss,Tiled Single,OpenMP(outer),OpenMP(inner),OpenMP(collapsed),OpenMP(single loop)" << endl;
         
     for (int N = 100; N < 3000; N += 100) {
+        cout << "****\nSize\t" << N << endl; 
         double* answer = new double[N];
         generateInput(original, answer, N);
         init(working, N);
@@ -31,18 +32,19 @@ int main() {
         {
             copyMatrix(original, working, N);
             double innerTime = tiledInnerParallelGauss(working, answer, N);
-            report << innerTime << endl;
+            report << innerTime;
         }
         {
             copyMatrix(original, working, N);
             double collapseTime = collapseParallelGauss(working, answer, N);
-            report << collapseTime << endl;
+            report << collapseTime;
         }
         {
             copyMatrix(original, working, N);
             double oneLoopTime = oneLoopParallelGauss(working, answer, N);
-            report << oneLoopTime << endl;
+            report << oneLoopTime;
         }
+        cout << endl;
         
         delete [] answer;
         clear(original, N);

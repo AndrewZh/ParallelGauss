@@ -46,7 +46,7 @@ double tiledInnerParallelGauss(double** a, double* answer, size_t N) {
         cout << "ERROR\n";
     }
 
-    cout << "Forward Gauss:\n\tTime spent " << finish - start << " seconds\n";
+    cout << "Inner:\n\tTime spent " << finish - start << " seconds\n";
     delete [] x;
 
     return finish - start;
