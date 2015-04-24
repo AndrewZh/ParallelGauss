@@ -1,7 +1,7 @@
 #include "common.h"
 
-void generateInput(double**& matrix, double*& answer) {
-    init(matrix);        
+void generateInput(double**& matrix, double*& answer, size_t N) {
+    init(matrix, N);        
     srand(time(0));
     //int c = 1;
     for (int i = 0; i < N; ++i) {
@@ -22,21 +22,21 @@ void generateInput(double**& matrix, double*& answer) {
     }
 }
 
-void init(double**& matrix) {
+void init(double**& matrix, size_t N) {
     matrix = new double*[N];
     for (int i = 0; i < N; ++i) {
         matrix[i] = new double[N + 1];
     }
 }
 
-void clear(double**& matrix) {
+void clear(double**& matrix, size_t N) {
     for (int i = 0; i < N; ++i) {
         delete [] matrix[i];
     }
     delete [] matrix;
 }
 
-void copyMatrix(double** mat1, double** mat2) {
+void copyMatrix(double** mat1, double** mat2, size_t N) {
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N+1; ++j) {
             mat2[i][j] = mat1[i][j];
@@ -44,7 +44,7 @@ void copyMatrix(double** mat1, double** mat2) {
     }
 }
 
-void makeMainElementNotZero(double **a) {
+void makeMainElementNotZero(double **a, size_t N) {
 	for (int i = 0; i < N; i++) {
         if (a[i][i] == 0) {
             for (int j = i + 1; j < N; j++)
@@ -65,23 +65,25 @@ void makeMainElementNotZero(double **a) {
 
 }
 
-void tile(int k, int i_gl, int j_gl, int r1, int r2, double** matrix) {
-    int start_i = max(k+1, 1+i_gl * r1);
-    int finish_i = min(1+r1*(1 + i_gl), N);
-    int start_j = max(k+1, 1 + j_gl * r2);
-    int finish_j = min(1+r2 * (1 + j_gl), N+1);
-/*
-    cout << "k = " << k << endl
-            << "i = [" << start_i << ", " << finish_i << "]" << endl
-            << "j = [" << start_j << ", " << finish_j << "]" << endl;
-*/   
-    for (int i = start_i; i < finish_i; ++i) {               
-        double coef = matrix[i][k] / matrix[k][k];
-        for (int j = start_j; j < finish_j; ++j) {
-            matrix[i][j] = matrix[i][j] - matrix[k][j] * coef;
-//            cout << matrix[i][j] << " ";
+void tile(int i_gl, int j_gl, int r1, int r2, double** matrix, size_t N) {
+    for (int k = 0; k < N - 1; ++k) {
+        int start_i = max(k+1, 1+i_gl * r1);
+        int finish_i = min(1+r1*(1 + i_gl), (int)N);
+        int start_j = max(k+1, 1 + j_gl * r2);
+        int finish_j = min(1+r2 * (1 + j_gl), (int)N+1);
+    /*
+        cout << "k = " << k << endl
+                << "i = [" << start_i << ", " << finish_i << "]" << endl
+                << "j = [" << start_j << ", " << finish_j << "]" << endl;
+    */   
+        for (int i = start_i; i < finish_i; ++i) {               
+            double coef = matrix[i][k] / matrix[k][k];
+            for (int j = start_j; j < finish_j; ++j) {
+                matrix[i][j] = matrix[i][j] - matrix[k][j] * coef;
+    //            cout << matrix[i][j] << " ";
+            }
+    //        cout << endl;
         }
-//        cout << endl;
+    //    cout << "*******\n\n";
     }
-//    cout << "*******\n\n";
 }

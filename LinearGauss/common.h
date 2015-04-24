@@ -9,20 +9,21 @@
 
 #include <omp.h>
 
-#define N 10
 #define NUMBER_OF_THREADS 4
 
 using namespace std;
 
-void generateInput(double**& matrix, double*& answer);
-void init(double**& matrix);
-void clear(double**& matrix);
-double linearGauss(double** matrix, double* answer);
-double tiledGauss(double** a, double* answer);
-double tiledOuterParallelGauss(double** a, double* answer);
-double tiledInnerParallelGauss(double** a, double* answer);
-void tile(int k, int i_gl, int j_gl, int r1, int r2, double** matrix);
-void copyMatrix(double** mat1, double** mat2);
-void makeMainElementNotZero(double** matrix);
+void generateInput(double**& matrix, double*& answer, size_t N);
+void init(double**& matrix, size_t N);
+void clear(double**& matrix, size_t N);
+double linearGauss(double** matrix, double* answer, size_t N);
+double tiledGauss(double** a, double* answer, size_t N);
+double tiledOuterParallelGauss(double** a, double* answer, size_t N);
+double tiledInnerParallelGauss(double** a, double* answer, size_t N);
+double oneLoopParallelGauss(double** a, double* answer, size_t N);
+double collapseParallelGauss(double** a, double* answer, size_t N);
+void tile(int i_gl, int j_gl, int r1, int r2, double** matrix, size_t N);
+void copyMatrix(double** mat1, double** mat2, size_t N);
+void makeMainElementNotZero(double** matrix, size_t N);
 
 #endif // COMMON_H

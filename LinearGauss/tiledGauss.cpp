@@ -1,9 +1,9 @@
-#include "common.h"
+#include "tiledGauss.h"
 
-double tiledGauss(double** a, double* answer) {
+double tiledGauss(double** a, double* answer, size_t N) {
     double* x = new double[N];
 
-	makeMainElementNotZero(a);
+	makeMainElementNotZero(a, N);
 
     int r1 = 2;
     int r2 = 2;
@@ -14,10 +14,8 @@ double tiledGauss(double** a, double* answer) {
     //##########
     double start = omp_get_wtime();
     for (int i_gl = 0; i_gl < Q1; ++i_gl) {
-        for (int j_gl = 0; j_gl < Q2; ++j_gl) {
-            for (int k = 0; k < N - 1; ++k) {
-                tile(k, i_gl, j_gl, r1, r2, a);
-            }
+        for (int j_gl = 0; j_gl < Q2; ++j_gl) {            
+            tile(i_gl, j_gl, r1, r2, a, N);            
         }
     }
     double finish = omp_get_wtime();

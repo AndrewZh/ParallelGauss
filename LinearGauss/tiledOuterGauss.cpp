@@ -1,6 +1,6 @@
-#include "common.h"
+#include "tiledOuterGauss.h"
 
-double tiledOuterParallelGauss(double** a, double* answer) {
+double tiledOuterParallelGauss(double** a, double* answer, size_t N) {
     double* x = new double[N];
 
     int r1 = 2;
@@ -10,17 +10,15 @@ double tiledOuterParallelGauss(double** a, double* answer) {
 	int Q2 = N / r2;
     
     omp_set_num_threads(NUMBER_OF_THREADS);
-	makeMainElementNotZero(a);
+	makeMainElementNotZero(a, N);
     
     
     //##########
     double start = omp_get_wtime();
 #pragma omp parallel for    
     for (int i_gl = 0; i_gl < Q1; ++i_gl) {
-        for (int j_gl = 0; j_gl < Q2; ++j_gl) {
-            for (int k = 0; k < N - 1; ++k) {
-                tile(k, i_gl, j_gl, r1, r2, a);
-            }
+        for (int j_gl = 0; j_gl < Q2; ++j_gl) {            
+            tile(i_gl, j_gl, r1, r2, a, N);
         }
     }
     double finish = omp_get_wtime();

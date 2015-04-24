@@ -1,10 +1,10 @@
-#include "common.h"
+#include "linearGauss.h"
 
-double linearGauss(double** a, double* answer) {
+double linearGauss(double** a, double* answer, size_t N) {
     double* x = new double[N];
 
     cout << setprecision(2);
-	makeMainElementNotZero(a);
+	makeMainElementNotZero(a, N);
     
     //##########
     double start = omp_get_wtime();
