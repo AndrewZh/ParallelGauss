@@ -7,7 +7,8 @@
 #include <omp.h>
 
 using namespace std;
-#define N 3000
+#define N 10
+#define NUMBER_OF_THREADS 4
 
 void generateInput(double**& matrix, double*& answer);
 void init(double**& matrix);
@@ -18,6 +19,7 @@ double tiledOuterParallelGauss(double** a, double* answer);
 double tiledInnerParallelGauss(double** a, double* answer);
 void tile(int k, int i_gl, int j_gl, int r1, int r2, double** matrix);
 void copyMatrix(double** mat1, double** mat2);
+void makeMainElementNotZero(double** matrix);
 
 int main() {
     double** working; //[N][N+1];
@@ -53,37 +55,24 @@ int main() {
 
     report.close();
     delete [] answer;
-    //cin.ignore();
+    cin.ignore();
 }
 
 double tiledGauss(double** a, double* answer) {
     double* x = new double[N];
 
-    int r1 = N / 2;
-    int r2 = N / 2;
-        
-    for (int i = 0; i < N; i++) {
-        if (a[i][i] == 0) {
-            for (int j = i + 1; j < N; j++)
-                if (a[j][i] != 0) {
-                    for (int k = 0; k < N; k++) {
-                        double p = a[i][k];
-                        a[i][k] = a[j][k];
-                        a[j][k] = p;
+	makeMainElementNotZero(a);
 
-                    }
-                    double p = a[i][N];
-                    a[i][N] = a[j][N];
-                    a[j][N] = p;
-                    break;
-                }
-        }
-    }
-    
+    int r1 = 2;
+    int r2 = 2;
+
+	int Q1 = N / r1;
+	int Q2 = N / r2;
+        
     //##########
     double start = omp_get_wtime();
-    for (int i_gl = 0; i_gl < N / r1; ++i_gl) {
-        for (int j_gl = 0; j_gl < N / r2; ++j_gl) {
+    for (int i_gl = 0; i_gl < Q1; ++i_gl) {
+        for (int j_gl = 0; j_gl < Q2; ++j_gl) {
             for (int k = 0; k < N - 1; ++k) {
                 tile(k, i_gl, j_gl, r1, r2, a);
             }
@@ -124,34 +113,21 @@ double tiledGauss(double** a, double* answer) {
 double tiledOuterParallelGauss(double** a, double* answer) {
     double* x = new double[N];
 
-    int r1 = N / 2;
-    int r2 = N / 2;
+    int r1 = 2;
+    int r2 = 2;
+
+	int Q1 = N / r1;
+	int Q2 = N / r2;
     
-    omp_set_num_threads(2);
-
-    for (int i = 0; i < N; i++) {
-        if (a[i][i] == 0) {
-            for (int j = i + 1; j < N; j++)
-                if (a[j][i] != 0) {
-                    for (int k = 0; k < N; k++) {
-                        double p = a[i][k];
-                        a[i][k] = a[j][k];
-                        a[j][k] = p;
-
-                    }
-                    double p = a[i][N];
-                    a[i][N] = a[j][N];
-                    a[j][N] = p;
-                    break;
-                }
-        }
-    }
+    omp_set_num_threads(NUMBER_OF_THREADS);
+	makeMainElementNotZero(a);
+    
     
     //##########
     double start = omp_get_wtime();
 #pragma omp parallel for    
-    for (int i_gl = 0; i_gl < N / r1; ++i_gl) {
-        for (int j_gl = 0; j_gl < N / r2; ++j_gl) {
+    for (int i_gl = 0; i_gl < Q1; ++i_gl) {
+        for (int j_gl = 0; j_gl < Q2; ++j_gl) {
             for (int k = 0; k < N - 1; ++k) {
                 tile(k, i_gl, j_gl, r1, r2, a);
             }
@@ -192,34 +168,19 @@ double tiledOuterParallelGauss(double** a, double* answer) {
 double tiledInnerParallelGauss(double** a, double* answer) {
     double* x = new double[N];
 
-    int r1 = N / 2;
-    int r2 = N / 2;
-    
-    omp_set_num_threads(2);
-    
-    for (int i = 0; i < N; i++) {
-        if (a[i][i] == 0) {
-            for (int j = i + 1; j < N; j++)
-                if (a[j][i] != 0) {
-                    for (int k = 0; k < N; k++) {
-                        double p = a[i][k];
-                        a[i][k] = a[j][k];
-                        a[j][k] = p;
+    int r1 = 2;
+    int r2 = 2;
 
-                    }
-                    double p = a[i][N];
-                    a[i][N] = a[j][N];
-                    a[j][N] = p;
-                    break;
-                }
-        }
-    }
+	int Q1 = N / r1;
+	int Q2 = N / r2;
     
+	omp_set_num_threads(NUMBER_OF_THREADS);
+    makeMainElementNotZero(a);
     //##########
     double start = omp_get_wtime();
-    for (int i_gl = 0; i_gl < N / r1; ++i_gl) {
+    for (int i_gl = 0; i_gl < Q1; ++i_gl) {
 #pragma omp parallel for        
-        for (int j_gl = 0; j_gl < N / r2; ++j_gl) {
+        for (int j_gl = 0; j_gl < Q2; ++j_gl) {
             for (int k = 0; k < N - 1; ++k) {
                 tile(k, i_gl, j_gl, r1, r2, a);
             }
@@ -281,24 +242,8 @@ double linearGauss(double** a, double* answer) {
     double* x = new double[N];
 
     cout << setprecision(2);
-    for (int i = 0; i < N; i++) {
-        if (a[i][i] == 0) {
-            for (int j = i + 1; j < N; j++)
-                if (a[j][i] != 0) {
-                    for (int k = 0; k < N; k++) {
-                        double p = a[i][k];
-                        a[i][k] = a[j][k];
-                        a[j][k] = p;
-
-                    }
-                    double p = a[i][N];
-                    a[i][N] = a[j][N];
-                    a[j][N] = p;
-                    break;
-                }
-        }
-    }
-
+	makeMainElementNotZero(a);
+    
     //##########
     double start = omp_get_wtime();
     for (int k = 0; k < N - 1; k++) {
@@ -387,4 +332,25 @@ void copyMatrix(double** mat1, double** mat2) {
             mat2[i][j] = mat1[i][j];
         }
     }
+}
+
+void makeMainElementNotZero(double **a) {
+	for (int i = 0; i < N; i++) {
+        if (a[i][i] == 0) {
+            for (int j = i + 1; j < N; j++)
+                if (a[j][i] != 0) {
+                    for (int k = 0; k < N; k++) {
+                        double p = a[i][k];
+                        a[i][k] = a[j][k];
+                        a[j][k] = p;
+
+                    }
+                    double p = a[i][N];
+                    a[i][N] = a[j][N];
+                    a[j][N] = p;
+                    break;
+                }
+        }
+    }
+
 }
