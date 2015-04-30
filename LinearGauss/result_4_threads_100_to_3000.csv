@@ -1,0 +1,4 @@
+Size,Linear Gauss,Tiled Single,OpenMP(outer),OpenMP(inner),OpenMP(single loop)
+100,0.005195,0.01075,0.01529,0.034930.07471
+200,0.04312,0.09902,0.03396,0.28650.1349
+300,0.1153,0.239,0.09114,0.35310.3158

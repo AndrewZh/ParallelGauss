@@ -4,7 +4,7 @@ int main() {
     double** working; //[N][N+1];
     double** original;
     
-	ofstream report("results.csv", ios::trunc);
+	ofstream report(RESULT_FILE, ios::trunc);
     //report << "Size,Linear Gauss,Tiled Single,OpenMP(outer),OpenMP(inner),OpenMP(collapsed),OpenMP(single loop)" << endl;
 	report << "Size,Linear Gauss,Tiled Single,OpenMP(outer),OpenMP(inner),OpenMP(single loop)" << endl;
 
@@ -13,7 +13,7 @@ int main() {
 
 	omp_set_num_threads(NUMBER_OF_THREADS);
         
-    for (int N = MIN_N; N < MAX_N; N += DIFF_N) {
+    for (int N = MIN_N; N <= MAX_N; N += DIFF_N) {
         cout << "****\nSize\t" << N << endl; 
         double* answer = new double[N];
         generateInput(original, answer, N);
@@ -36,12 +36,12 @@ int main() {
         {
             copyMatrix(original, working, N);
             double innerTime = tiledInnerParallelGauss(working, answer, N);
-            report << innerTime;
+            report << innerTime << ",";
         }
         {
            /* copyMatrix(original, working, N);
             double collapseTime = collapseParallelGauss(working, answer, N);
-            report << collapseTime;*/
+            report << collapseTime << ",";*/
         }
         {
             copyMatrix(original, working, N);
@@ -49,6 +49,7 @@ int main() {
             report << oneLoopTime;
         }
         cout << endl;
+		report << endl;
         
         delete [] answer;
         clear(original, N);
