@@ -87,3 +87,37 @@ void tile(int i_gl, int j_gl, int r1, int r2, double** matrix, size_t N) {
     //    cout << "*******\n\n";
     }
 }
+
+void check(double **a, double *answer, size_t N) {
+	double* x = new double[N];
+
+	x[N - 1] = a[N - 1][N] / a[N - 1][N - 1];
+    a[N - 1][N - 1] = 1;
+    for (int i = N - 2; i >= 0; i--) {
+        x[i] = a[i][N];
+        for (int j = i + 1; j < N; j++)
+            x[i] -= x[j] * a[i][j] / a[j][j];
+        x[i] /= a[i][i];
+        a[i][i] = 1;
+    }
+
+    bool flag = true;
+    for (int i = 0; i < N; ++i) {
+        if (abs(x[i] - answer[i]) > EPS) {
+            flag = false;
+            break;
+        }
+    }
+    if (flag) {
+        cout << "OK\n";
+    } else {
+        cout << "ERROR\n";
+		for (int i = 0; i < N; ++i) {
+			if (abs(x[i] - answer[i]) > EPS) {
+				cout << "\t" << i << ": expected " << answer[i] << " got " << x[i] << " - difference = " << abs(x[i] - answer[i]) << endl;
+        }
+    }
+    }
+
+	delete [] x;
+}

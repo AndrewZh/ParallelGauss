@@ -4,12 +4,16 @@ int main() {
     double** working; //[N][N+1];
     double** original;
     
-    cout << setprecision(2);
+	ofstream report("results.csv", ios::trunc);
+    //report << "Size,Linear Gauss,Tiled Single,OpenMP(outer),OpenMP(inner),OpenMP(collapsed),OpenMP(single loop)" << endl;
+	report << "Size,Linear Gauss,Tiled Single,OpenMP(outer),OpenMP(inner),OpenMP(single loop)" << endl;
 
-    ofstream report("results.csv", ios::trunc);
-    report << "Size,Linear Gauss,Tiled Single,OpenMP(outer),OpenMP(inner),OpenMP(collapsed),OpenMP(single loop)" << endl;
+	cout << setprecision(3);
+	report << setprecision(4);
+
+	omp_set_num_threads(NUMBER_OF_THREADS);
         
-    for (int N = 100; N < 3000; N += 100) {
+    for (int N = MIN_N; N < MAX_N; N += DIFF_N) {
         cout << "****\nSize\t" << N << endl; 
         double* answer = new double[N];
         generateInput(original, answer, N);
@@ -35,9 +39,9 @@ int main() {
             report << innerTime;
         }
         {
-            copyMatrix(original, working, N);
+           /* copyMatrix(original, working, N);
             double collapseTime = collapseParallelGauss(working, answer, N);
-            report << collapseTime;
+            report << collapseTime;*/
         }
         {
             copyMatrix(original, working, N);

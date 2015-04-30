@@ -10,6 +10,11 @@
 #include <omp.h>
 
 #define NUMBER_OF_THREADS 4
+#define EPS 10e-4
+
+#define MIN_N 4
+#define MAX_N 10
+#define DIFF_N 2
 
 using namespace std;
 
@@ -25,5 +30,7 @@ double collapseParallelGauss(double** a, double* answer, size_t N);
 void tile(int i_gl, int j_gl, int r1, int r2, double** matrix, size_t N);
 void copyMatrix(double** mat1, double** mat2, size_t N);
 void makeMainElementNotZero(double** matrix, size_t N);
+
+void check(double **a, double *answer, size_t N);
 
 #endif // COMMON_H
