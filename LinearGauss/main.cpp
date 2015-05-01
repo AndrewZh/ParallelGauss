@@ -4,14 +4,14 @@ int main() {
     double** working; //[N][N+1];
     double** original;
     
-	ofstream report(RESULT_FILE, ios::trunc);
+	ofstream report(RESULT_FILE, ios::app);
     //report << "Size,Linear Gauss,Tiled Single,OpenMP(outer),OpenMP(inner),OpenMP(collapsed),OpenMP(single loop)" << endl;
 	report << "Size,Linear Gauss,Tiled Single,OpenMP(outer),OpenMP(inner),OpenMP(single loop)" << endl;
 
 	cout << setprecision(3);
 	report << setprecision(4);
 
-	omp_set_num_threads(NUMBER_OF_THREADS);
+	//omp_set_num_threads(NUMBER_OF_THREADS);
         
     for (int N = MIN_N; N <= MAX_N; N += DIFF_N) {
         cout << "****\nSize\t" << N << endl; 
