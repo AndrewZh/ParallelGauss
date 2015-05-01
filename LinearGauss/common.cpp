@@ -87,7 +87,7 @@ void tile(int k, int i_gl, int j_gl, int r1, int r2, double** matrix, size_t N) 
 
 }
 
-void check(char *title, double **a, double *answer, size_t N, double time) {
+void check(std::string title, double **a, double *answer, size_t N, double time) {
 	double* x = new double[N];
 
 	x[N - 1] = a[N - 1][N] / a[N - 1][N - 1];

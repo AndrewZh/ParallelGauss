@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <stdlib.h>
 #include <time.h>
+#include <string>
 
 #include <omp.h>
 
@@ -25,16 +26,16 @@ void init(double**& matrix, size_t N);
 void clear(double**& matrix, size_t N);
 
 double linearGauss(double** matrix, double* answer, size_t N);
-double tiledGauss(double** a, double* answer, size_t N);
-double tiledOuterParallelGauss(double** a, double* answer, size_t N);
-double tiledInnerParallelGauss(double** a, double* answer, size_t N);
-double oneLoopParallelGauss(double** a, double* answer, size_t N);
-double collapseParallelGauss(double** a, double* answer, size_t N);
+double tiledGauss(double** a, double* answer, size_t N, int r1, int r2);
+double tiledOuterParallelGauss(double** a, double* answer, size_t N, int r1, int r2);
+double tiledInnerParallelGauss(double** a, double* answer, size_t N, int r1, int r2);
+double oneLoopParallelGauss(double** a, double* answer, size_t N, int r1, int r2);
+double collapseParallelGauss(double** a, double* answer, size_t N, int r1, int r2);
 
 void tile(int k, int i_gl, int j_gl, int r1, int r2, double** matrix, size_t N);
 void copyMatrix(double** mat1, double** mat2, size_t N);
 void makeMainElementNotZero(double** matrix, size_t N);
 
-void check(char *title, double **a, double *answer, size_t N, double time);
+void check(std::string title, double **a, double *answer, size_t N, double time);
 
 #endif // COMMON_H

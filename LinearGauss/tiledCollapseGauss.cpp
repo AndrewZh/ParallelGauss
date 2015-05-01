@@ -1,10 +1,10 @@
 #include "tiledCollapseGauss.h"
 
-double collapseParallelGauss(double** a, double* answer, size_t N) {
+double collapseParallelGauss(double** a, double* answer, size_t N, int r1, int r2) {
     makeMainElementNotZero(a, N);
 
-    int r1 = 2;
-    int r2 = 2;
+//    int r1 = 2;
+//    int r2 = 2;
 
 	int Q1 = N / r1;
 	int Q2 = N / r2;
