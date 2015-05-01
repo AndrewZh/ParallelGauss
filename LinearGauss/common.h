@@ -17,7 +17,7 @@
 #define MAX_N 3000
 #define DIFF_N 100
 
-#define RESULT_FILE "result_4_threads_100_to_3000.csv"
+#define RESULT_FILE "result_100_to_3000.csv"
 
 using namespace std;
 
