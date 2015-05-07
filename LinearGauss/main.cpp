@@ -6,40 +6,46 @@ int main() {
     double** working; //[N][N+1];
     double** original;
     
-    cout << setprecision(3);    
+    cout << setprecision(4);    
 
     omp_set_num_threads(NUMBER_OF_THREADS);
 
-    int R1[] = {1, MAX_N, 1, 2};
-    int R2[] = {MAX_N, 1, 1, 2};
+	int R1[] = {50, 10, 1};//{1,10, 50, 100};//{1, MAX_N, 1, 2};
+	int R2[] = {50, 10, 1};//{1,10, 50, 100};//{MAX_N, 1, 1, 2};
+
+	char* filenames[] = {
+		//"reports/2015-05-06/100x100_4_nodes.csv",
+		"reports/2015-05-06/50x50_4_nodes.csv",
+		"reports/2015-05-06/10x10_4_nodes.csv",
+		"reports/2015-05-06/1x1_4_nodes.csv"};
     
     double linearTime;
     int numberOfExperiments = sizeof(R1) / sizeof(*R1);
     for (int experimentNumber = 0; experimentNumber < numberOfExperiments; ++experimentNumber) {
         int r1 = R1[experimentNumber];
         int r2 = R2[experimentNumber];
-        std::stringstream report_name("report_");
-        report_name << r1 << "x" << r2 << ".csv";
-        ofstream report(report_name.str().c_str(), ios::trunc);        
+		ofstream report(filenames[experimentNumber], ios::trunc);
         report << setprecision(4);
         report << "Size,Linear Gauss,Tiled Single,OpenMP(outer),OpenMP(inner),OpenMP(single loop)" << endl;
 
         for (int N = MIN_N; N <= MAX_N; N += DIFF_N) {
-            cout << "****\nSize\t" << N << endl;
-            double* answer = new double[N];
-            generateInput(original, answer, N);
-            init(working, N);
-            copyMatrix(original, working, N);
+			cout << "****\nSize\t" << N << endl;
+			cout << "Tile\t" << r1 << "x" << r2 << endl;
+			double* answer = new double[N];
+			generateInput(original, answer, N);
+			init(working, N);
+			copyMatrix(original, working, N);
 
-            if (experimentNumber == 0) {
-                linearTime = linearGauss(working, answer, N);
-            }
-            report << N << "," << linearTime << ",";
+			// don't do it again! linar time depends on N!!!
+			//if (experimentNumber == 0) {
+			linearTime = linearGauss(working, answer, N);
+			//}
+			report << N << "," << linearTime << ",";
 
-            {
-                copyMatrix(original, working, N);
-                double tiledTime = tiledGauss(working, answer, N, r1, r2);
-                report << tiledTime << ",";
+			{
+				copyMatrix(original, working, N);
+				double tiledTime = tiledGauss(working, answer, N, r1, r2);
+				report << tiledTime << ",";
             }
             {
                 copyMatrix(original, working, N);
