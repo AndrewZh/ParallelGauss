@@ -10,25 +10,27 @@ int main() {
 
     omp_set_num_threads(NUMBER_OF_THREADS);
 
-	int R1[] = {50, 10, 1};//{1,10, 50, 100};//{1, MAX_N, 1, 2};
-	int R2[] = {50, 10, 1};//{1,10, 50, 100};//{MAX_N, 1, 1, 2};
+	int R1[] = {1};//{1,10, 50, 100};//{1, MAX_N, 1, 2};
+	int R2[] = {1};//{1,10, 50, 100};//{MAX_N, 1, 1, 2};
 
 	char* filenames[] = {
 		//"reports/2015-05-06/100x100_4_nodes.csv",
-		"reports/2015-05-06/50x50_4_nodes.csv",
-		"reports/2015-05-06/10x10_4_nodes.csv",
-		"reports/2015-05-06/1x1_4_nodes.csv"};
+		//"reports/2015-05-06/50x50_4_nodes.csv",
+		//"reports/2015-05-07/Nx1_4_nodes.csv",
+		"reports/2015-05-07/1xN_4_nodes.csv"};
     
     double linearTime;
     int numberOfExperiments = sizeof(R1) / sizeof(*R1);
     for (int experimentNumber = 0; experimentNumber < numberOfExperiments; ++experimentNumber) {
         int r1 = R1[experimentNumber];
         int r2 = R2[experimentNumber];
-		ofstream report(filenames[experimentNumber], ios::trunc);
+		
+		ofstream report(filenames[experimentNumber], ios::app);
         report << setprecision(4);
         report << "Size,Linear Gauss,Tiled Single,OpenMP(outer),OpenMP(inner),OpenMP(single loop)" << endl;
 
         for (int N = MIN_N; N <= MAX_N; N += DIFF_N) {
+			r2 = N;
 			cout << "****\nSize\t" << N << endl;
 			cout << "Tile\t" << r1 << "x" << r2 << endl;
 			double* answer = new double[N];
