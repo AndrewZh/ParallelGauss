@@ -14,10 +14,10 @@ int main() {
 	int R2[] = {1};//{1,10, 50, 100};//{MAX_N, 1, 1, 2};
 
 	char* filenames[] = {
-		//"reports/2015-05-06/100x100_4_nodes.csv",
+		//"reports/2015-05-22/NxN_4_nodes.csv",
 		//"reports/2015-05-06/50x50_4_nodes.csv",
 		//"reports/2015-05-07/Nx1_4_nodes.csv",
-		"reports/2015-05-07/1xN_4_nodes.csv"};
+		"reports/2015-05-22/NxN_4_nodes.csv"};
     
     double linearTime;
     int numberOfExperiments = sizeof(R1) / sizeof(*R1);
@@ -31,6 +31,7 @@ int main() {
 
         for (int N = MIN_N; N <= MAX_N; N += DIFF_N) {
 			r2 = N;
+			r1 = N;
 			cout << "****\nSize\t" << N << endl;
 			cout << "Tile\t" << r1 << "x" << r2 << endl;
 			double* answer = new double[N];
